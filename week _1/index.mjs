@@ -10,6 +10,11 @@ const startingBalance = stdlib.parseCurrency(100);
 //give those balances to each parseCurrency in dollars and another in pennies
 const accAlice = await stdlib.newTestAccount(startingBalance)
 const accBob = await stdlib.newTestAccount(startingBalance)
+//tokenizing application
+const fmt =(x) => stdlib.formatCurrency(x, 4);
+const getBalance = async (who) => fmt(await stdlib.balanceOff(who));
+const beforeAlice = await getBalance(accAlice);
+const beforeBob = await getBalance(accBob);
 
 //setup contract
 //alice deploys contract in the backend .contract to deploy and attach to app
@@ -37,10 +42,22 @@ const Player = (Who) => ({
 await Promise.all([
   ctcAlice.p.Alice({
     //interact object
-    ...Player('Alice')
+    ...Player('Alice'),
+    //create wager method, she wages 5 tokens
+    wager: stdlib.parseCurrency(5),
   }),
   ctcBob.p.Bob({
     //interact object
-    ...Player('Bob')
+    ...Player('Bob'),
+    //bob accepts wager
+    acceptWager:(amt)=> {
+      console.log('Bob accepst the wager of ${fmt(amt)}.')
+    }
   }),
-])
+]);
+
+const afterAlice = await getBalance(accAlice);
+const afterBob = await getBalance(accBob);
+
+console.log('Alice went from ${beforeAlice} to ${afterAlice}.');
+console.log('Bob went from ${beforeBob} to ${afterBob}.');
