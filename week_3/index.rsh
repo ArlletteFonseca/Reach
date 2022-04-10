@@ -1,7 +1,7 @@
 'reach 0.1';
 //enumaration 3 possibilities
 const [ isHand, ROCK, PAPER, SCISSORS ] = makeEnum(3);
-//enumaration of potential outcomes
+//enumaration of potential outcomes first one is the name and the rest are the outcomes, so here name is isOutcome
 const [ isOutcome, B_WINS, DRAW, A_WINS ] = makeEnum(3);
 
 const winner = [handAlice, handBob] =>
@@ -34,7 +34,7 @@ const winner = (handAlice, handBob) =>
     }
 
     export const main = Reach.App(()=> {
-      const Alice = Participant('('Alice')', {
+      const Alice = Participant('Alice', {
         ...Player,
         wager: UInt,
        });
@@ -81,4 +81,19 @@ const winner = (handAlice, handBob) =>
           Alice.publish(saltAlice,handAlice);
           //unencrypt in the blockchain and consensus step using checkCommitment
           checkCommitment(commitAlice, saltAlice, handAlice);
+
+          //matrix of winner and losers
+          const outcome = winner(handAlice, handBob);
+          const                  [forAlice, forBob] =
+          outcome == A_WINS ?    [       2, 0];
+          outcome == B_WINS ?    [       0, 2];
+                                 [       1, 1];
+          //transfer statements
+          transfer(forAlice*wager).to(Alice);
+          transfer(forBob*wager).to(Bob);
+          commit();
+          //helps us quickly move from consensus step to local step so they can verify who won
+          each([Alice, Bob], () => {
+            interact.seeOutcome(outcome);
+          })
     })
