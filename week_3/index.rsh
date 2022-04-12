@@ -1,4 +1,6 @@
+//backend
 'reach 0.1';
+
 //enumaration 3 possibilities
 const [ isHand, ROCK, PAPER, SCISSORS ] = makeEnum(3);
 //enumaration of potential outcomes first one is the name and the rest are the outcomes, so here name is isOutcome
