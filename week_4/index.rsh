@@ -6,8 +6,8 @@ const [ isHand, ROCK, PAPER, SCISSORS ] = makeEnum(3);
 //enumaration of potential outcomes first one is the name and the rest are the outcomes, so here name is isOutcome
 const [ isOutcome, B_WINS, DRAW, A_WINS ] = makeEnum(3);
 
-const winner = [handAlice, handBob] =>
-  ((handAlice + 4(4-handBob)) % 3);
+// const winner = (handAlice, handBob) =>
+//   ((handAlice + 4(4-handBob)) % 3);
 
 //define winner
 const winner = (handAlice, handBob) =>
@@ -41,6 +41,7 @@ const winner = (handAlice, handBob) =>
       const Alice = Participant('Alice', {
         ...Player,
         wager: UInt,
+        deadline:UInt,
        });
        const Bob = Participant('Bob', {
         ...Player,
@@ -67,7 +68,7 @@ const winner = (handAlice, handBob) =>
            //commitAlice below holds the salt
            const commitAlice = declassify(_commitAlice);
            //Alice will create a deadline remember to add to publish
-           const deadline = declassify(interact.dealine);
+           const deadline = declassify(interact.deadline);
          });
          //alice moves to consensus step, hey I have published my hand but it's a secret
          //if bob doesnt' participate Alice will lose tokens
@@ -79,7 +80,7 @@ const winner = (handAlice, handBob) =>
           unknowable(Bob, Alice(_handAlice, _saltAlice));
 
           Bob.only(() => {
-            inteact.acceptWager(wager);
+            interact.acceptWager(wager);
             const handBob = declassify(interact.getHand());
           });
           Bob.publish(handBob)
@@ -96,15 +97,16 @@ const winner = (handAlice, handBob) =>
             const handAlice = declassify(_handAlice);
           });
           //here alice publishes to blockchain
-          Alice.publish(saltAlice,handAlice);
+          Alice.publish(saltAlice,handAlice)
+            .timeout(relativeTime(deadline), () => closeTo(Bob, informTimeout));
           //unencrypt in the blockchain and consensus step using checkCommitment
           checkCommitment(commitAlice, saltAlice, handAlice);
 
           //matrix of winner and losers
           const outcome = winner(handAlice, handBob);
           const                  [forAlice, forBob] =
-          outcome == A_WINS ?    [       2, 0];
-          outcome == B_WINS ?    [       0, 2];
+          outcome == A_WINS ?    [       2, 0]:
+          outcome == B_WINS ?    [       0, 2]:
                                  [       1, 1];
           //transfer statements
           transfer(forAlice*wager).to(Alice);

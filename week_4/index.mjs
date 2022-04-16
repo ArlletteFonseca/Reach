@@ -59,14 +59,26 @@ await Promise.all([
     //wager has no inputs but integer as an output
     wager: stdlib.parseCurrency(5),
     //deadline method she will launch contract and set that deadline
-    deadline:UInt,
+    deadline:10,
   }),
   ctcBob.p.Bob({
     //interact object
     ...Player("Bob"),
     //bob accepts wager, takes integer amt and returns a message
-    acceptWager: (amt) => {
-      console.log(`Bob accepst the wager of ${fmt(amt)}.`);
+    acceptWager: async (amt) => {
+      //trigger a timeout so we can observe it in practice
+
+        if(Math.random() <=0.5) {
+          //count up to 10 forces timeout event to trigger
+          for(let i =0; i < 10; i++) {
+            console.log(`Bob Takes his sweet time...`);
+            await stdlib.wait(1);
+          }
+      }else {
+        //if timeout trigger doesn't occur bob accepts wager
+        console.log(`Bob accepst the wager of ${fmt(amt)}.`);
+      }
+
     },
   }),
 ]);
