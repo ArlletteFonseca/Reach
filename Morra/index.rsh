@@ -3,7 +3,6 @@
 
 //definitions
 const Player = {
- //define input and outputs
  //getFingers has no parameters and outputs numbers
  getFingers: Fun([], UInt),
  getSum: Fun([], UInt),
@@ -17,8 +16,9 @@ export const main = Reach.app(() => {
     //interact interface
     ...Player,
   });
-  const Bob = Participant('('Bob')', {
+  const Bob = Participant('Bob', {
     //interact interface
     ...Player,
     })
+
 });
