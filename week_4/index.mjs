@@ -14,9 +14,9 @@ const accBob = await stdlib.newTestAccount(startingBalance);
 //fmt is format and it's a constant
 //format currency while show whole numbers and up to 4 decimal places
 const fmt = (x) => stdlib.formatCurrency(x, 4);
-//who means Alice or bob and shows the balance of either
+//function for getting the balance of a participant and displaying it with up to 4 decimals
 const getBalance = async (who) => fmt(await stdlib.balanceOf(who));
-//
+//gets the balance before the game starts
 const beforeAlice = await getBalance(accAlice);
 const beforeBob = await getBalance(accBob);
 
