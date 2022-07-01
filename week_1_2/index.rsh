@@ -15,6 +15,7 @@ export const main = Reach.App(() => {
     //interact interface here
     ...Player
   });
+  //init is used to initialize reach app
   init();
   //after this we move into step 1 we move into a new state of our application
   //using only method she goes into her local step in her local machine
