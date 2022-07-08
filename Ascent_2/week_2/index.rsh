@@ -41,6 +41,7 @@ export const main = Reach.App(() => {
     interact.acceptWager(wager);
     const handBob = declassify(interact.getHand());
   });
+  //publish handles information and pay handles tokens
   Bob.publish(handBob)
     .pay(wager);
   const outcome = (handAlice + (4 - handBob)) % 3;

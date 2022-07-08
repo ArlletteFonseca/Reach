@@ -32,7 +32,7 @@ const Player = {
   getDescription = Fun([],byte)
 }
 
-
+//NEXT GIST
 export const main = Reach.app(()=> {
   const Creator = Participant(('creator', {
     ...Player
@@ -41,17 +41,21 @@ export const main = Reach.app(()=> {
     ...Player
   }));
   const Buyer = Participant(('Buyer', {
-    ...Player
+    ...Player,
+    payment: UInt,
   }))
 
-  Creator.only(()=>{
 
-  })
   Bidder.only(()=>{
-
+    const price = declassify(interact.seePrice())
   })
+  Bidder.publish(price);
+
   Buyer.only(()=>{
+    const payment = declassify(interact.payment)
     const description = declassify(interact.getDescription())
   })
-  Buyer.publish(description)
+//publish description and payment and make payment using pay()
+  Buyer.publish(description,payment)
+   .pay(payment);
 });
